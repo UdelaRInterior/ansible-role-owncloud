@@ -1,5 +1,5 @@
 ---
-# handlers file for nextcloud
+# handlers file for owncloud
 - name: restart mysql
   service:
     name: mysql
@@ -7,17 +7,17 @@
 
 - name: start http
   service:
-    name: "{{ nextcloud_websrv }}"
+    name: "{{ owncloud_websrv }}"
     state: started
 
 - name: restart http
   service:
-    name: "{{ nextcloud_websrv }}"
+    name: "{{ owncloud_websrv }}"
     state: restarted
 
 - name: reload http
   service:
-    name: "{{ nextcloud_websrv }}"
+    name: "{{ owncloud_websrv }}"
     state: reloaded
 
 - name: start php-fpm

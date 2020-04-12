@@ -28,15 +28,15 @@
         service:
           name: "postgresql"
           state: started
-      when: nextcloud_db_backend == 'pgsql'
+      when: owncloud_db_backend == 'pgsql'
         
   vars:
-    nextcloud_db_backend: "{{ lookup( 'env', 'NC_DB' ) }}"
-    nextcloud_websrv: "{{ lookup( 'env', 'NC_WEB' ) }}"
-    nextcloud_version_major: 15
-    nextcloud_trusted_domain:
+    owncloud_db_backend: "{{ lookup( 'env', 'OC_DB' ) }}"
+    owncloud_websrv: "{{ lookup( 'env', 'OC_WEB' ) }}"
+    owncloud_version_major: 15
+    owncloud_trusted_domain:
       - localhost
       - 127.0.0.1
-    #  nextcloud_apps:
-    #    files_external: "" #enable files_external which is already installed in nextcloud
-    #    calendar: "https://github.com/nextcloud/calendar/releases/download/v1.5.0/calendar.tar.gz" # download and install calendar app
+    #  owncloud_apps:
+    #    files_external: "" #enable files_external which is already installed in owncloud
+    #    calendar: "https://github.com/owncloud/calendar/releases/download/v1.5.0/calendar.tar.gz" # download and install calendar app

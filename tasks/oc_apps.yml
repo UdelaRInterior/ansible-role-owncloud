@@ -1,0 +1,63 @@
+---
+- name: parse the item values
+  set_fact:
+    oc_app_name: "{{ item.key }}"
+    oc_app_cfg: "{{ item.value }}"
+
+- block:
+  - name: "[ App {{ oc_app_name }} ] - Download Archive in apps folder."
+    unarchive:
+      copy: no
+      src: "{{ oc_app_cfg }}"
+      dest: "{{ owncloud_webroot }}/apps/"
+      owner: "{{ owncloud_websrv_user }}"
+      group: "{{ owncloud_websrv_group }}"
+      creates: "{{ owncloud_webroot }}/apps/{{ oc_app_name }}"
+    when: oc_app_cfg is not empty
+
+  - name: "[ App {{ oc_app_name }} ] - enable the application."
+    become_user: "{{ owncloud_websrv_user }}"
+    become_flags: "{{ ansible_become_flags | default(omit) }}"
+    become: yes
+    command: php occ app:enable "{{ oc_app_name }}"
+    args:
+      chdir: "{{ owncloud_webroot }}"
+  when: oc_app_cfg is string
+
+- block:
+  - name: verify the app's yaml declaration
+    assert:
+      that:
+        - (oc_app_cfg.source is defined) and (oc_app_cfg.source is string)
+      msg: "{{ oc_app_name }} is not well declared."
+
+  - name: "[ App {{ oc_app_name }} ] - Download Archive in apps folder."
+    unarchive:
+      copy: no
+      src: "{{ oc_app_cfg.source }}"
+      dest: "{{ owncloud_webroot }}/apps/"
+      owner: "{{ owncloud_websrv_user }}"
+      group: "{{ owncloud_websrv_group }}"
+      creates: "{{ owncloud_webroot }}/apps/{{ oc_app_name }}"
+    when: oc_app_cfg.source is not empty
+
+  - name: "[ App {{ oc_app_name }} ] - enable the application."
+    become_user: "{{ owncloud_websrv_user }}"
+    become_flags: "{{ ansible_become_flags | default(omit) }}"
+    become: yes
+    command: php occ app:enable "{{ oc_app_name }}"
+    args:
+      chdir: "{{ owncloud_webroot }}"
+  - block:
+    - name: "[ App {{ oc_app_name }} ] - Configure the application "
+      become_user: "{{ owncloud_websrv_user }}"
+      become_flags: "{{ ansible_become_flags | default(omit) }}"
+      become: yes
+      command: php occ config:app:set {{ oc_app_name }} {{ item_cfg.key }} --value="{{ item_cfg.value }}"
+      args:
+        chdir: "{{ owncloud_webroot }}"
+      with_dict: "{{ oc_app_cfg.conf | default({}) }}"
+      loop_control:
+        loop_var: item_cfg
+    when: oc_app_cfg.conf is defined
+  when: (oc_app_cfg is mapping)

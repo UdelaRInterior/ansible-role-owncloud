@@ -16,10 +16,10 @@
         - curl
 
   roles:
-    - ansible-nextcloud
+    - ansible-owncloud
 
   vars:
-     nextcloud_db_backend: "mariadb"
-     nextcloud_apps:
-       files_external: "" #enable files_external which is already installed in nextcloud
-       calendar: "https://github.com/nextcloud/calendar/releases/download/v1.5.0/calendar.tar.gz" # download and install calendar app
+     owncloud_db_backend: "mariadb"
+     owncloud_apps:
+       files_external: "" #enable files_external which is already installed in owncloud
+       calendar: "https://github.com/owncloud/calendar/releases/download/v1.5.0/calendar.tar.gz" # download and install calendar app

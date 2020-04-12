@@ -1,9 +1,9 @@
 ---
 # additionnal setup and fixes for OS dependent environment
-- name: "controls nextcloud_trusted_domain type"
+- name: "controls owncloud_trusted_domain type"
   fail:
-    msg: "New versions require nextcloud_trusted_domain to be declared as a list."
-  when: nextcloud_trusted_domain is string
+    msg: "New versions require owncloud_trusted_domain to be declared as a list."
+  when: owncloud_trusted_domain is string
 
 - name: "[ENV] include OS static vars"
   include_vars: '{{ item }}'
@@ -12,7 +12,7 @@
     - '{{ ansible_os_family }}.yml'
 
 - name: "[ENV] - ca-certificate are up to date"
-  # needed for downloading from download.nextcloud.com as the site use letsencrypt certificates
+  # needed for downloading from download.owncloud.com as the site use letsencrypt certificates
   # letsencrypt may not be trusted on older OS
   apt:
     name: "{{ item }}"
@@ -32,7 +32,7 @@
 - name: "[ENV] - Debian only : checking sudo."
   command: "dpkg -l sudo"
   changed_when: False
-  register: nc_sudo_installed_result
+  register: oc_sudo_installed_result
   failed_when: False
   when: ansible_distribution == "Debian"
 
@@ -42,6 +42,6 @@
   - name: "[ENV] - force su to use /bin/sh as shell"
     set_fact: ansible_become_flags='-s /bin/sh'
   when:
-    - nc_sudo_installed_result.rc is defined
-    - nc_sudo_installed_result.rc != 0
+    - oc_sudo_installed_result.rc is defined
+    - oc_sudo_installed_result.rc != 0
 

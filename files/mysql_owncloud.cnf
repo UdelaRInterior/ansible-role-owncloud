@@ -3,7 +3,7 @@
 # Do NOT modify this file by hand!
 ################################################################################
 
-# Nextcloud mysql.cnf
+# Owncloud mysql.cnf
 
 [mysqld]
 binlog_format = MIXED

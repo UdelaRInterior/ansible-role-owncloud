@@ -9,24 +9,24 @@
       - "php{{ php_ver }}-pgsql"
       - "python{{ '3' if ansible_python.version.major == 3 else '' }}-psycopg2"
 
-- name: "[PostgreSQL] - generate nextcloud role password."
-  set_fact: nextcloud_db_pwd="{{ lookup( 'password', 'nextcloud_instances/'+ nextcloud_instance_name +'/pgsql_nc.pwd' ) }}"
-  when: nextcloud_db_pwd is not defined
+- name: "[PostgreSQL] - generate owncloud role password."
+  set_fact: owncloud_db_pwd="{{ lookup( 'password', 'owncloud_instances/'+ owncloud_instance_name +'/pgsql_nc.pwd' ) }}"
+  when: owncloud_db_pwd is not defined
 
-- name: "[PostgreSQL] - nextcloud role is created."
+- name: "[PostgreSQL] - owncloud role is created."
   postgresql_user:
-    name: "{{ nextcloud_db_admin }}"
-    password: "{{ nextcloud_db_pwd }}"
+    name: "{{ owncloud_db_admin }}"
+    password: "{{ owncloud_db_pwd }}"
     encrypted: yes
     state: present
     role_attr_flags: CREATEDB
   become_user: postgres
   become: yes
 
-- name: "[PostgreSQL] - nextcloud database is created."
+- name: "[PostgreSQL] - owncloud database is created."
   postgresql_db:
-    name: "{{ nextcloud_db_name }}"
+    name: "{{ owncloud_db_name }}"
     state: present
-    owner: "{{ nextcloud_db_admin }}"
+    owner: "{{ owncloud_db_admin }}"
   become_user: postgres
   become: yes

@@ -1,6 +1,6 @@
 galaxy_info:
   author: Aalaesar
-  description: Add a new Nextcloud instance in your infrastructure. The role manages dependencies and initial configuration.
+  description: Add a new Owncloud instance in your infrastructure. The role manages dependencies and initial configuration.
 
   license: BSD
 
@@ -18,7 +18,7 @@ galaxy_info:
     - buster
 
   galaxy_tags:
-   - nextcloud
+   - owncloud
    - filesharing
    - installation
    - private

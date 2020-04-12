@@ -49,9 +49,9 @@
 
 
 - name: "[NGINX] -  Public Diffie-Hellman Parameter are generated. This might take a while."
-  command: "openssl dhparam -out {{ nextcloud_tls_dhparam }} 2048"
+  command: "openssl dhparam -out {{ owncloud_tls_dhparam }} 2048"
   args:
-    creates: "{{ nextcloud_tls_dhparam }}"
+    creates: "{{ owncloud_tls_dhparam }}"
 
 - name: "[NGINX] -  php handler configuration is present."
   template:
@@ -66,16 +66,16 @@
     state: link
   notify: reload http
 
-- name: "[NGINX] -  generate Nextcloud configuration for nginx"
+- name: "[NGINX] -  generate Owncloud configuration for nginx"
   template:
-    dest: /etc/nginx/sites-available/nc_{{ nextcloud_instance_name }}.cnf
-    src: "{{ nextcloud_websrv_template }}"
+    dest: /etc/nginx/sites-available/oc_{{ owncloud_instance_name }}.cnf
+    src: "{{ owncloud_websrv_template }}"
   notify: reload http
 
-- name: "[NGINX] -  Enable Nextcloud in nginx conf"
+- name: "[NGINX] -  Enable Owncloud in nginx conf"
   file:
-    path: /etc/nginx/sites-enabled/nc_{{ nextcloud_instance_name }}
-    src: /etc/nginx/sites-available/nc_{{ nextcloud_instance_name }}.cnf
+    path: /etc/nginx/sites-enabled/oc_{{ owncloud_instance_name }}
+    src: /etc/nginx/sites-available/oc_{{ owncloud_instance_name }}.cnf
     state: link
   notify: reload http
 
@@ -83,5 +83,5 @@
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent
-  when: nextcloud_disable_websrv_default_site | bool
+  when: owncloud_disable_websrv_default_site | bool
   notify: reload http

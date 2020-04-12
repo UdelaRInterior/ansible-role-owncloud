@@ -1,19 +1,19 @@
 ---
 - name: define certificate path
-  set_fact: nextcloud_tls_cert_file="{{ nextcloud_tls_cert }}"
+  set_fact: owncloud_tls_cert_file="{{ owncloud_tls_cert }}"
 - name: define key path
-  set_fact: nextcloud_tls_cert_key_file="{{ nextcloud_tls_cert_key }}"
+  set_fact: owncloud_tls_cert_key_file="{{ owncloud_tls_cert_key }}"
 - name: define certificate chain  path
-  set_fact: nextcloud_tls_cert_chain_file="{{ nextcloud_tls_cert_chain }}"
-  when: nextcloud_tls_cert_chain is defined
+  set_fact: owncloud_tls_cert_chain_file="{{ owncloud_tls_cert_chain }}"
+  when: owncloud_tls_cert_chain is defined
 # - name: "[INSTALLED TLS] - check TLS certificate permissions"
   # file:
-    # path: "{{ nextcloud_tls_cert_file }}"
+    # path: "{{ owncloud_tls_cert_file }}"
     # mode: 0644
-    # group: "{{ nextcloud_websrv_group }}"
+    # group: "{{ owncloud_websrv_group }}"
 
 # - name: "[INSTALLED TLS] - check TLS key permissions"
   # file:
-    # path: "{{ nextcloud_tls_cert_key_file }}"
+    # path: "{{ owncloud_tls_cert_key_file }}"
     # mode: 0640
-    # group: "{{ nextcloud_websrv_group }}"
+    # group: "{{ owncloud_websrv_group }}"

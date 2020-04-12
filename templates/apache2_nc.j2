@@ -3,8 +3,8 @@
 # Do NOT modify this file by hand!
 ################################################################################
 
-{% if nextcloud_install_tls and nextcloud_tls_enforce %}
-{% for domain in nextcloud_trusted_domain %}
+{% if owncloud_install_tls and owncloud_tls_enforce %}
+{% for domain in owncloud_trusted_domain %}
 <VirtualHost *:80>
   ServerName {{ domain }}
   Redirect permanent / https://{{ domain | ipwrap }}/
@@ -12,15 +12,15 @@
 {% endfor %}
 {% else %}
 <VirtualHost *:80>
-  ServerName {{ nextcloud_trusted_domain[0] }}
-{% for index in range(1, nextcloud_trusted_domain|length) %}
-  ServerAlias {{ nextcloud_trusted_domain[index]}}
+  ServerName {{ owncloud_trusted_domain[0] }}
+{% for index in range(1, owncloud_trusted_domain|length) %}
+  ServerAlias {{ owncloud_trusted_domain[index]}}
 {% endfor %}
-  DocumentRoot {{ nextcloud_webroot }}
-  {% if (nextcloud_max_upload_size_in_bytes|int) <= 2147483647-%}
-  LimitRequestBody {{ nextcloud_max_upload_size_in_bytes }}
+  DocumentRoot {{ owncloud_webroot }}
+  {% if (owncloud_max_upload_size_in_bytes|int) <= 2147483647-%}
+  LimitRequestBody {{ owncloud_max_upload_size_in_bytes }}
   {% endif -%}
-  <Directory {{ nextcloud_webroot }}>
+  <Directory {{ owncloud_webroot }}>
     Allow from all
     Satisfy Any
     Options +FollowSymlinks
@@ -30,37 +30,37 @@
     Dav off
    </IfModule>
 
-   SetEnv HOME {{ nextcloud_webroot }}
-   SetEnv HTTP_HOME {{ nextcloud_webroot }}
+   SetEnv HOME {{ owncloud_webroot }}
+   SetEnv HTTP_HOME {{ owncloud_webroot }}
 
   </Directory>
 </VirtualHost>
 {% endif %}
 
-{% if nextcloud_install_tls %}
+{% if owncloud_install_tls %}
 <VirtualHost *:443>
-  ServerName {{ nextcloud_trusted_domain[0] }}
-{% for index in range(1, nextcloud_trusted_domain|length) %}
-  ServerAlias {{ nextcloud_trusted_domain[index]}}
+  ServerName {{ owncloud_trusted_domain[0] }}
+{% for index in range(1, owncloud_trusted_domain|length) %}
+  ServerAlias {{ owncloud_trusted_domain[index]}}
 {% endfor %}
-  DocumentRoot {{ nextcloud_webroot }}
-  {% if (nextcloud_max_upload_size_in_bytes|int) <= 2147483647-%}
-  LimitRequestBody {{ nextcloud_max_upload_size_in_bytes }}
+  DocumentRoot {{ owncloud_webroot }}
+  {% if (owncloud_max_upload_size_in_bytes|int) <= 2147483647-%}
+  LimitRequestBody {{ owncloud_max_upload_size_in_bytes }}
   {% endif -%}
   SSLEngine on
-  SSLCertificateFile      {{ nextcloud_tls_cert_file }}
-  SSLCertificateKeyFile   {{ nextcloud_tls_cert_key_file }}
-{% if nextcloud_tls_cert_chain_file is defined %}
-  SSLCertificateChainFile {{ nextcloud_tls_cert_chain_file }}
+  SSLCertificateFile      {{ owncloud_tls_cert_file }}
+  SSLCertificateKeyFile   {{ owncloud_tls_cert_key_file }}
+{% if owncloud_tls_cert_chain_file is defined %}
+  SSLCertificateChainFile {{ owncloud_tls_cert_chain_file }}
 {% endif %}
 
-{% if nextcloud_hsts is string %}
+{% if owncloud_hsts is string %}
   <IfModule mod_headers.c>
-    Header always set Strict-Transport-Security "{{ nextcloud_hsts }}"
+    Header always set Strict-Transport-Security "{{ owncloud_hsts }}"
   </IfModule>
 {% endif %}
 
-  <Directory {{ nextcloud_webroot }}>
+  <Directory {{ owncloud_webroot }}>
     Allow from all
     Satisfy Any
     Options +FollowSymlinks
@@ -70,15 +70,15 @@
     Dav off
    </IfModule>
 
-   SetEnv HOME {{ nextcloud_webroot }}
-   SetEnv HTTP_HOME {{ nextcloud_webroot }}
+   SetEnv HOME {{ owncloud_webroot }}
+   SetEnv HTTP_HOME {{ owncloud_webroot }}
 
   </Directory>
 </VirtualHost>
 {% endif %}
 
-{% if nextcloud_install_tls %}
-{% if nextcloud_mozilla_modern_ssl_profile %}
+{% if owncloud_install_tls %}
+{% if owncloud_mozilla_modern_ssl_profile %}
 # modern configuration, tweak to your needs
 SSLProtocol             all -SSLv3 -TLSv1 -TLSv1.1
 SSLCipherSuite          ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256
