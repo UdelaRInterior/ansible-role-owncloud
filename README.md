@@ -1,7 +1,4 @@
-[![Build Status](https://travis-ci.org/aalaesar/install_owncloud.svg?branch=master)](https://travis-ci.org/aalaesar/install_owncloud)
-[![pipeline status](https://gitlab.ninux.org/hispanico/ansible-owncloud/badges/master/pipeline.svg)](https://gitlab.ninux.org/hispanico/ansible-owncloud/pipelines?scope=branches)
-
-# install_owncloud
+# Owncloud Ansible role
 
 This role installs and configures an Owncloud instance for a debian/Ubuntu server.
 
@@ -13,6 +10,8 @@ The role's main actions are:
 -   [x] Redis Server installation.
 -   [x] Strengthened TLS configuration following _Mozilla SSL Configuration Generator_, intermediate profile by default, modern profile available.
 -   [x] Post installation of Owncloud applications
+
+This role is an adaptation to Owncloud of [`aalaesar.install_nextcloud`](https://galaxy.ansible.com/aalaesar/install_nextcloud) role.
 
 ## Requirements
 ### Ansible version
@@ -32,7 +31,7 @@ This role requires root access, so either configure it in your inventory files, 
 - hosts: dnsserver
   become: yes
   roles:
-    - role: aalaesar.install_owncloud
+    - role: udelarinterior.install_owncloud
 ```
 
 ## Role Variables
@@ -54,31 +53,31 @@ This table summarize the possible cases.
 
 |channel|latest|major&latest|major|full|special|
 |---|---|---|---|---|---|
-|**releases**|yes/no|_null_ \|9\|10\|...|_null_|"10.0.3"|_null_|
-|**prereleases**|_null_|_null_|_null_|"11.0.1"|_null_ \|"RC(n)\|beta(n)"|
+|**community**|yes/no|_null_ \|9\|10\|...|_null_|"10.0.3"|_null_|
+|**testing**|_null_|_null_|_null_|"11.0.1"|_null_ \|"RC(n)\|beta(n)"|
 |**daily**|yes/no|_null_ \|master\|stable9\|...|master\|9\|10\|...|_null_|_null_ \|"YYYY-MM-DD"|
 
 **major&latest** = major value when latest is true
 _null_ = "not used"
 #### version variables:
 ```YAML
-owncloud_version_channel: "releases" # releases | prereleases | daily
+owncloud_version_channel: "community" # community | testing | daily
 ```
 Specify the main channel to use.
 ```YAML
 owncloud_get_latest: true
 ```
-Specify if the "latest" archive should be downloaded.
+Specify if the "latest" archive should be downloaded. This paramenter doesn't work for Owncloud yet.
 
 ```YAML
 # owncloud_version_major: 10
 ```
-Specify what major version you desire.
+Specify what major version you desire. Major version doesn't work for Owncloud yet.
 
 ```YAML
-# owncloud_version_full: "10.0.3"
+owncloud_version_full: "10.3.2"
 ```
-The full version of the desired owncloud instance. type **M.F.P** _(Major.Feature.Patch)_
+The full version of the desired owncloud instance. type **M.F.P** _(Major.Feature.Patch)_ This works for Owncloud.
 
 ```YAML
 # owncloud_version_special: ""
@@ -113,7 +112,7 @@ owncloud_version_major: 42
 owncloud_version_channel: "releases"
 owncloud_get_latest: true
 ```
--   Choose the latest v10 release:
+-   Choose the latest v10 release (Nextcloud only):
 ```YAML
 owncloud_version_channel: "releases"
 owncloud_get_latest: true
@@ -121,13 +120,13 @@ owncloud_version_major: 10
 ```
 -   Choose a specific release:
 ```YAML
-owncloud_version_channel: "releases"
+owncloud_version_channel: "community"
 owncloud_get_latest: false
-owncloud_full_version: "10.0.3"
+owncloud_full_version: "10.3.2"
 ```
 -   Get the owncloud 11.0.1 prerelease 1:
 ```YAML
-owncloud_version_channel: "prereleases"
+owncloud_version_channel: "testing"
 owncloud_version_full: "11.0.1"
 owncloud_version_special: "RC1"
 ```

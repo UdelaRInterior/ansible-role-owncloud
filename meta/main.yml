@@ -1,8 +1,11 @@
 galaxy_info:
-  author: Aalaesar
+  role_name: owncloud
+  author: 
+  - Aalaesar
+  - Daniel Viñar Ulriksen (@ulvida)
   description: Add a new Owncloud instance in your infrastructure. The role manages dependencies and initial configuration.
 
-  license: BSD
+  license: GPL-3.0-only
 
   min_ansible_version: 2.5
 
