@@ -1,4 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
+## For Ansible role install
+meta/.galaxy_install_info
 ### Vim template
 # swap
 [._]*.s[a-w][a-z]

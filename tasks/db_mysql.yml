@@ -30,6 +30,7 @@
     priv: "*.*:ALL,GRANT"
     # Assuming the root user has only localhost access
     host_all: yes
+  ignore_errors: yes
 
 
 - name: "[mySQL] - Delete the anonymous user."

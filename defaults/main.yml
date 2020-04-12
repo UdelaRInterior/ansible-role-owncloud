@@ -3,17 +3,17 @@
 # [DOWNLOAD]
   # An URL will be generated following naming rules used by owncloud's repository
   # Not following this rules correctly will make the role unable to download owncloud.
-owncloud_version_channel: "releases" # mandatory # releases | prereleases | daily
-    # channel releases requires version_full.
-    # channel prereleases requires version_full. Optional: version_special.
-    # channel daily requires requires version_full & version_special.
+owncloud_version_channel: "community" # mandatory # community | testing | daily
+    # channel community requires version_full.
+    # channel testing requires version_full. Optional: version_special.
+    # channel daily requires doesn't require version
 owncloud_get_latest: true # mandatory # specify if the latest archive should be downloaded. # doesn't work for owncloud
     # Override generated file name for channels: releases | daily.
     # optional : version_major.
 # owncloud_version_major: 10 # (9 | 10 | 11| ..) for releases |  for daily : (master | stable9 | stable10 | ...)
 owncloud_version_full: "10.3.2" # full version string   ## Working for Owncloud
 # owncloud_version_special: "" #  For prereleases: "RCn|beta" | for daily "YYYY-MM-DD"
-owncloud_repository: "https://download.owncloud.org/  " # Domain URL where to download Owncloud.
+owncloud_repository: "https://download.owncloud.org/" # Domain URL where to download Owncloud.
 owncloud_archive_format: "zip" # zip | tar.bz2
 # owncloud_full_url: "https://h2g2.com/downloads/42/my_owncloud.zip" # specify directly a full URL to the archive if you don't like rules.
 

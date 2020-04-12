@@ -5,7 +5,7 @@
 - name: Trigger all pending handlers
   meta: flush_handlers
 
-- name: "[NC] - Setting directory ownership & permissions for the data folder"
+- name: "[OC] - Setting directory ownership & permissions for the data folder"
   file:
     path: "{{ owncloud_data_dir }}"
     mode: "u=rwX,g=rX,o-rwx"
@@ -14,11 +14,11 @@
     owner: "{{ owncloud_websrv_user }}"
     group: "{{ owncloud_websrv_group }}"
 
-- name: "[NC] - generate {{ owncloud_admin_name }} password:"
+- name: "[OC] - generate {{ owncloud_admin_name }} password:"
   set_fact: owncloud_admin_pwd="{{ lookup( 'password', 'owncloud_instances/'+ owncloud_instance_name +'/web_admin.pwd length=10' ) }}"
   when: owncloud_admin_pwd is not defined
 
-- name: "[NC] - Set temporary permissions for command line installation."
+- name: "[OC] - Set temporary permissions for command line installation."
   file:
     path: "{{ owncloud_webroot }}"
     state: directory
@@ -27,12 +27,12 @@
     group: "{{ owncloud_websrv_group }}"
 
 - block:
-  - name: "[NC] - removing possibly old or incomplete config.php"
+  - name: "[OC] - removing possibly old or incomplete config.php"
     file:
       path: "{{ owncloud_webroot }}/config/config.php"
       state: absent
 
-  - name: "[NC] - Run occ installation command"
+  - name: "[OC] - Run occ installation command"
     become_user: "{{ owncloud_websrv_user }}"
     become_flags: "{{ ansible_become_flags | default(omit) }}"
     become: yes
@@ -54,12 +54,12 @@
       owncloud_tmp_backend: "{{ 'mysql' if owncloud_db_backend == 'mariadb' else owncloud_db_backend }}"
     notify: reload http
 
-  - name: "[NC] - Verify config.php - check filesize"
+  - name: "[OC] - Verify config.php - check filesize"
     stat: path="{{ owncloud_webroot }}/config/config.php"
     register: oc_installation_confsize
     failed_when: oc_installation_confsize.stat.size is undefined or oc_installation_confsize.stat.size <= 100
 
-  - name: "[NC] - Verify config.php - php syntax check"
+  - name: "[OC] - Verify config.php - php syntax check"
     command: "php -l {{ owncloud_webroot }}/config/config.php"
     register: oc_installation_confphp
     changed_when: False
@@ -72,13 +72,13 @@
     #   include_tasks: tasks/unfix_su.yml
     #   when: ansible_become_method == "su"
 
-    - name: "[NC] - removing config.php when occ fail"
+    - name: "[OC] - removing config.php when occ fail"
       file:
         path: "{{ owncloud_webroot }}/config/config.php"
         state: absent
       failed_when: True
 
-- name: "[NC] - Set Trusted Domains"
+- name: "[OC] - Set Trusted Domains"
   become_user: "{{ owncloud_websrv_user }}"
   become_flags: "{{ ansible_become_flags | default(omit) }}"
   become: yes
@@ -88,7 +88,7 @@
   with_indexed_items: "{{ owncloud_trusted_domain }}"
   changed_when: true
 
-- name: "[NC] - Set Trusted Proxies"
+- name: "[OC] - Set Trusted Proxies"
   become_user: "{{ owncloud_websrv_user }}"
   become_flags: "{{ ansible_become_flags | default(omit) }}"
   become: yes
@@ -98,7 +98,7 @@
   with_indexed_items: "{{ owncloud_trusted_proxies }}"
   changed_when: true
 
-- name: "[NC] - Set Owncloud settings in config.php"
+- name: "[OC] - Set Owncloud settings in config.php"
   become_user: "{{ owncloud_websrv_user }}"
   become_flags: "{{ ansible_become_flags | default(omit) }}"
   become: yes
@@ -109,7 +109,7 @@
     - "{{ owncloud_config_settings }}"
   changed_when: true
 
-- name: "[NC] - Set Redis Server"
+- name: "[OC] - Set Redis Server"
   become_user: "{{ owncloud_websrv_user }}"
   become_flags: "{{ ansible_become_flags | default(omit) }}"
   become: yes
@@ -120,7 +120,7 @@
     - "{{ owncloud_redis_settings }}"
   when: (owncloud_install_redis_server | bool)
 
-- name: "[NC] - Install Cronjob"
+- name: "[OC] - Install Cronjob"
   cron:
     name: "Owncloud Cronjob"
     minute: "*/15"
@@ -129,7 +129,7 @@
     cron_file: "owncloud"
   when: (owncloud_background_cron | bool)
 
-- name: "[NC] - Set Cron method to Crontab"
+- name: "[OC] - Set Cron method to Crontab"
   become_user: "{{ owncloud_websrv_user }}"
   become_flags: "{{ ansible_become_flags | default(omit) }}"
   become: yes
@@ -138,22 +138,22 @@
     chdir: "{{ owncloud_webroot }}"
   when: (owncloud_background_cron | bool)
 
-- name: "[NC] - Set Custom Mimetype"
+- name: "[OC] - Set Custom Mimetype"
   copy:
     dest: "{{ owncloud_webroot }}/config/mimetypemapping.json"
     src: files/owncloud_custom_mimetypemapping.json
 
-- name: "[NC] - Ensure Owncloud directories are 0750"
+- name: "[OC] - Ensure Owncloud directories are 0750"
   command: find {{ owncloud_data_dir }} -type d -exec chmod -c 0750 {} \;
   register: oc_installation_chmod_result
   changed_when: "oc_installation_chmod_result.stdout != \"\""
 
-- name: "[NC] - Ensure Owncloud files are 0640"
+- name: "[OC] - Ensure Owncloud files are 0640"
   command: find {{ owncloud_data_dir }} -type f -exec chmod -c 0640 {} \;
   register: oc_installation_chmod_result
   changed_when: "oc_installation_chmod_result.stdout != \"\""
 
-- name: "[NC] - Setting stronger directory ownership"
+- name: "[OC] - Setting stronger directory ownership"
   file:
     path: "{{ owncloud_webroot }}/{{ item }}/"
     recurse: yes

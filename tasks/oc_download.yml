@@ -1,9 +1,9 @@
 ---
-- name: "[NC-DL] - Unzip is installed"
+- name: "[OC-DL] - Unzip is installed"
   package: name=unzip state=present
   when: owncloud_archive_format == "zip"
 
-- name: "[NC-DL] - bunzip2 is installed"
+- name: "[OC-DL] - bunzip2 is installed"
   package: name=bzip2 state=present
   when: owncloud_archive_format == "tar.bz2"
 
@@ -12,17 +12,17 @@
     that: owncloud_version_major is defined
   when: owncloud_full_url is defined
 
-#- name: "[NC-DL] - Create webroot folder"
+#- name: "[OC-DL] - Create webroot folder"
 #  file:
 #    path: "{{ owncloud_webroot }}"
 #    recurese: yes
 #    state: directory
 
-- name: "[NC-DL] - Create and set directory ownership & permissions for the webroot folder"
+- name: "[OC-DL] - Create and set directory ownership & permissions for the webroot folder"
   file:
     path: "{{ owncloud_webroot }}"
     mode: "u=rwX,g=rX,o-rwx"
-    recurse: yes"{{['latest', owncloud_version_major]|reject('undefined')|join('-')}}"
+    recurse: yes
     state: directory
     owner: "{{ owncloud_websrv_user }}"
     group: "{{ owncloud_websrv_group }}"
@@ -37,8 +37,8 @@
       owncloud_calculated_url: "{{ owncloud_repository }}/{{ owncloud_channel_path[owncloud_version_channel] }}/{{ owncloud_calculated_file }}"
       owncloud_calculated_file: "{{ [owncloud_dl_file_name[owncloud_version_channel], owncloud_archive_format]|join('.') }}"
 
-  - name: "[NC-DL] - Move extracted files to {{ owncloud_webroot }}."
+  - name: "[OC-DL] - Move extracted files to {{ owncloud_webroot }}."
     command: "cp -r /tmp/owncloud/. {{ owncloud_webroot }}/"
 
-  - name: "[NC-DL] - Remove owncloud archive files"
+  - name: "[OC-DL] - Remove owncloud archive files"
     file: path=/tmp/owncloud state=absent
