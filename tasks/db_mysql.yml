@@ -17,7 +17,7 @@
 - name: "[mySQL] - generate {{ owncloud_db_backend }} root Password:"
   set_fact:
     owncloud_mysql_root_pwd: "{{ lookup( 'password', 'owncloud_instances/'+ owncloud_instance_name +'/mysql_root.pwd' ) }}"
-  when: owncloud_mysql_root_pwd is not defined
+  when: owncloud_mysql_root_pwd_setup and owncloud_mysql_root_pwd is not defined
 
 # use debian default credentials to work on user root password
 - name: "[mySQL] - Update {{ owncloud_db_backend }} root password"
@@ -31,24 +31,25 @@
     # Assuming the root user has only localhost access
     host_all: yes
   ignore_errors: yes
+  when: owncloud_mysql_root_pwd_setup
 
 
 - name: "[mySQL] - Delete the anonymous user."
   mysql_user:
     user: ""
-    state: "absent"
-    login_user: root
-    login_password: "{{ owncloud_mysql_root_pwd }}"
-    config_file: "{{ mysql_credential_file[(ansible_os_family|lower)] | default(omit) }}"
+    state: absent
+    login_user: "{{ 'root' if owncloud_mysql_root_pwd_setup else omit }}"
+    login_password: "{{ owncloud_mysql_root_pwd if owncloud_mysql_root_pwd_setup else omit }}"
+    config_file: "{{ omit if owncloud_mysql_root_pwd_setup else mysql_credential_file[(ansible_os_family|lower)] | default(omit) }}"
   ignore_errors: yes
 
 - name: "[mySQL] - Removes the MySQL test database"
   mysql_db:
     name: test
     state: absent
-    login_user: root
-    login_password: "{{ owncloud_mysql_root_pwd }}"
-    config_file: "{{ mysql_credential_file[(ansible_os_family|lower)] | default(omit) }}"
+    login_user: "{{ 'root' if owncloud_mysql_root_pwd_setup else omit }}"
+    login_password: "{{ owncloud_mysql_root_pwd if owncloud_mysql_root_pwd_setup else omit }}"
+    config_file: "{{ omit if owncloud_mysql_root_pwd_setup else mysql_credential_file[(ansible_os_family|lower)] | default(omit) }}"
   ignore_errors: yes
 
 - name: "[mySQL] - Set mysql config option for owncloud"
@@ -65,9 +66,9 @@
 - name: "[mySQL] - Add Database {{ owncloud_db_name }}."
   mysql_db:
     name: "{{ owncloud_db_name }}"
-    login_user: root
-    login_password: "{{ owncloud_mysql_root_pwd }}"
-    config_file: "{{ mysql_credential_file[(ansible_os_family|lower)] | default(omit) }}"
+    login_user: "{{ 'root' if owncloud_mysql_root_pwd_setup else omit }}"
+    login_password: "{{ owncloud_mysql_root_pwd if owncloud_mysql_root_pwd_setup else omit }}"
+    config_file: "{{ omit if owncloud_mysql_root_pwd_setup else mysql_credential_file[(ansible_os_family|lower)] | default(omit) }}"
     state: present
 
 - name: "[mySQL] - Configure the database user."
@@ -75,7 +76,9 @@
     name: "{{ owncloud_db_admin }}"
     password: "{{ owncloud_db_pwd }}"
     priv: "{{ owncloud_db_name }}.*:ALL"
-    login_user: root
-    login_password: "{{ owncloud_mysql_root_pwd }}"
-    config_file: "{{ mysql_credential_file[(ansible_os_family|lower)] | default(omit) }}"
+    login_user: "{{ 'root' if owncloud_mysql_root_pwd_setup else omit }}"
+    login_password: "{{ owncloud_mysql_root_pwd if owncloud_mysql_root_pwd_setup else omit }}"
+    config_file: "{{ omit if owncloud_mysql_root_pwd_setup else mysql_credential_file[(ansible_os_family|lower)] | default(omit) }}"
     state: present
+
+...

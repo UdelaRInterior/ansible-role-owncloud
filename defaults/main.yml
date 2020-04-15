@@ -35,6 +35,8 @@ owncloud_disable_websrv_default_site: false
 owncloud_websrv_template: "templates/{{owncloud_websrv}}_nc.j2"
 owncloud_webroot: "/opt/owncloud"
 owncloud_data_dir: "/var/ncdata"
+
+# Owncloud final user (web interface)
 owncloud_admin_name: "admin"
 # owncloud_admin_pwd: "secret"
 
@@ -62,6 +64,10 @@ owncloud_config_settings:
 owncloud_install_db: true
 owncloud_db_host: "127.0.0.1"
 owncloud_db_backend: "mysql" # "mysql"/"mariadb" | "pgsql"
+# Recent debian mysql install doesn't need root password setup
+# Defines weather 
+owncloud_mysql_root_pwd_setup: true 
+# owncloud_mysql_root_pwd:
 owncloud_db_name: "owncloud"
 owncloud_db_admin: "ncadmin"
 # owncloud_db_pwd: "secret"
@@ -88,3 +94,5 @@ owncloud_apps: {}
 #owncloud_mysql_root_pwd: "secret"
 
 php_custom: false
+
+...
