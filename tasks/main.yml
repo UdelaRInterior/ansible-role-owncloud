@@ -73,7 +73,7 @@
     (oc_owncloud_configured.rc is defined and oc_owncloud_configured.rc != 0)
 
 - block:
-  - name: "[NC apps] - lists the number of apps available in the instance."
+  - name: "[OC apps] - lists the number of apps available in the instance."
     command: php occ app:list --output=json_pretty --no-warnings
     args:
       chdir: "{{ owncloud_webroot }}"
@@ -83,10 +83,10 @@
     changed_when: false
     register: oc_apps_list
 
-  - name: "[NC apps] - convert list toOC_ yaml."
+  - name: "[OC apps] - convert list toOC_ yaml."
     set_fact: oc_available_apps="{{ oc_apps_list.stdout | from_json }}"
 
-  - name: "[NC apps] - installation."
+  - name: "[OC apps] - installation."
     include_tasks: ./oc_apps.yml
     # do if the app is not enabled and ( (archive path is not "") or (app is disabled) )
     when:

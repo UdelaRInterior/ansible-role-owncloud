@@ -52,7 +52,8 @@ owncloud_redis_settings:
 owncloud_background_cron: True
 
 ## Custom owncloud settings
-## https://docs.owncloud.com/server/12/admin_manual/configuration_server/config_sample_php_parameters.html
+## https://docs.nextcloud.com/server/12/admin_manual/configuration_server/config_sample_php_parameters.html
+## (encontrar equivalente owncloud)
 owncloud_config_settings:
   - { name: 'overwrite.cli.url', value: 'https://{{ owncloud_trusted_domain | first }}' }
   - { name: 'memcache.local', value: '\OC\Memcache\APCu' }
